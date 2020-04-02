@@ -22,6 +22,8 @@ string curFileName;
 // fobidden characters for naming a file
 string forbiddenChars = ".<>:\"/\\|?*";
 
+
+
 /*
 Naming Scheme:
   cur: current (curFileName)
@@ -82,7 +84,10 @@ bool isValidfName(string fName) {
 }
 
 // given all the above functions hold true, we can create the file
-void createFile() {}
+void createFile() {
+  ofstream outfile(curFileName);
+  outfile.close();
+}
 
 // returns a string with all the contents of a text file
 // This currently only works with files that are known to be in the folder.
@@ -104,9 +109,16 @@ string readContents() {
 
 // This function, Will save the contents of the string to a .txt file.
 void updateContents() {
-
+  ofstream fileObject;
+  fileObject.open(curFileName, ofstream::out | ofstream::trunc);
+  // fileObject.write(curContents.c_str(),curContents.size());
+  fileObject << curContents;
+  fileObject.close();
 }
-/*This function is for sending the entire contents of whats held in the text file string*/
+
+/*
+This function does currently nothing
+*/
 // discuss with ahmed the best way of sending each character.
 void sendText() {
   //text character limit??
@@ -119,7 +131,7 @@ void sendText() {
 }
 
 // decides what to do with given ascii  (copy/paste functionality)
-void second_page_functionality(int val) {
+void copy_paste_index_functionality(int val) {
   if (val == 254) // Paste
   {
     curContents.insert(curIndex,copiedContents);
@@ -177,13 +189,24 @@ void second_page_functionality(int val) {
   }
 }
 
-int main() {
 
-  string curFileName = "AhmedIsGay";
-  cout << curFileName << endl;
+
+int main() {
+  curFileName = "AhmedIsGay";
+  // cout << curFileName << endl;
   if (isValidfName(curFileName)) {
     cout << "we good" << endl;
+    curFileName+=".txt";
+  }else{
+    cout << "we aint so good" << endl;
+    return 0;
   }
+  createFile();
+  curContents = "poop";
+  updateContents();
+
+
+
 
 
 
