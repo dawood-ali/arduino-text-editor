@@ -16,6 +16,12 @@ string curContents;
 
 bool toggleSelect = false;
 
+// Current filename, to be changed when dealing with other files.
+string curFileName;
+
+// fobidden characters for naming a file
+string forbiddenChars = ".<>:\"/\\|?*";
+
 /*
 Naming Scheme:
   cur: current (curFileName)
@@ -33,30 +39,57 @@ Define ascii functionalities:
   251: shift cursor right
   250: shift cursor left
   249: toggle select
-
 */
 
 // returns true if a given filename already exists
 bool fexists(string fName) {
 
-  if (fexists(fName+".txt")) {
-    cout << "fileName already exists" << endl;
-  }
   ifstream ifile(fName);
   return ifile.good();
 }
 
-void createFile(string fName) {}
+/*
+What it does:
+  Checks whether a given filename is valid.
+  checks for invalid characters, will cout the general error
+
+To do:
+  integrate with server, so that it displays these messages on the screen during file naming
+
+Input:
+  name of a file in string format
+
+Outputs:
+  whether the given filename is valid given the conditions
+*/
+bool isValidfName(string fName) {
+  bool invalidChars = false;
+  for (auto i : forbiddenChars) {
+    if (fName.find(i) != string::npos) {
+      invalidChars = true;
+      break;
+    }
+  }
+  if (invalidChars) {
+    cout << "there are invalid Characters, please do not use any of the following characters when naming a file: " << forbiddenChars << endl;
+    return false;
+  }
+  if (fexists(fName)) {
+    cout << "dis is error, filename exists" << endl;
+    return false;
+  }
+  return true;
+}
+
+// given all the above functions hold true, we can create the file
+void createFile() {}
 
 // returns a string with all the contents of a text file
 // This currently only works with files that are known to be in the folder.
-string readContents(string fName) {
-
+string readContents() {
   string contents;
-  int len = fName.length();
-  string extension = fName.substr(len-4,len);
-  string addExt = "";
-  ifstream file(fName+addExt);
+
+  ifstream file(curFileName);
 
   file.seekg(0, ios::end);
   contents.reserve(file.tellg());
@@ -69,9 +102,14 @@ string readContents(string fName) {
   return contents;
 }
 
-void fillScreen(string fName) {
+// This function, Will save the contents of the string to a .txt file.
+void updateContents() {
+
+}
+/*This function is for sending the entire contents of whats held in the text file string*/
+// discuss with ahmed the best way of sending each character.
+void sendText() {
   //text character limit??
-  curContents = readContents(fName);
 
   /*
   for (auto character : curContents) {
@@ -81,7 +119,7 @@ void fillScreen(string fName) {
 }
 
 // decides what to do with given ascii  (copy/paste functionality)
-void copyCutPaste(int val) {
+void second_page_functionality(int val) {
   if (val == 254) // Paste
   {
     curContents.insert(curIndex,copiedContents);
@@ -140,13 +178,14 @@ void copyCutPaste(int val) {
 }
 
 int main() {
-  string curFileName = "AhmedIsGay.txt";
-  string poop = curFileName.substr(13,14);
+
+  string curFileName = "AhmedIsGay";
   cout << curFileName << endl;
-  curFileName.insert(14," Poop");
-  cout << curFileName << endl;
-  curFileName.insert(7,"nt");
-  cout << curFileName << endl;
+  if (isValidfName(curFileName)) {
+    cout << "we good" << endl;
+  }
+
+
 
   //fillScreen(curFileName);
 
