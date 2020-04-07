@@ -290,6 +290,11 @@ int main() {
 	//Start receiving chars from the server
 	while(true){
 		receiving_mode();
+
+		//Tobi's Code for testing serial input
+		if(Serial.available()){
+			Serial.println(Serial.read());
+		}
 	}
 	return 0;
 }

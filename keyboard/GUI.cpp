@@ -264,6 +264,7 @@ void key_pressed() {
     	int index= pixel_x +offset_y;
 
     	if (index<=25) {
+			Serial.println("K " + index);
 
     		if (!caps_lock) {
 
@@ -293,6 +294,8 @@ void key_pressed() {
     	}
 
     	else if (index==26) {
+			Serial.println("K " + index);
+
     		if (!caps_lock) {
 
     			caps_lock=1;
@@ -315,6 +318,7 @@ void key_pressed() {
     	}
 
     	else if(index==27 || index==28) {
+			Serial.println("K " + index);
 
     		cursor_x+=12;
     		
@@ -326,6 +330,7 @@ void key_pressed() {
     	}
 
     	else if(index==30) {
+			Serial.println("K " + index);
 
     		if(cursor_x==0) {
 
@@ -351,6 +356,7 @@ void key_pressed() {
     	}
 
     	else if(index==29) {
+			Serial.println("K " + index);
 
     		//this is the return carrier, so just send the index 29 no need for ascii
 
@@ -516,39 +522,42 @@ void tools_pressed() {
     	}
 
     	else if(pixel_y==1 && pixel_x>160 && pixel_x < 320) {
-
     		//how you gonna copy cuz idk.
+			Serial.println("K 34");
     	}
 
     	else if (pixel_y==2 && pixel_x>160 && pixel_x < 320) {
-
     		//how you gonna paste
+			Serial.println("K 35");
     	}
 
     	else if (pixel_y==3 && pixel_x>160 && pixel_x < 320) {
     		//how you gonna cut
+			Serial.println("K 33");
     	}
 
     	else if (pixel_y==4 && pixel_x>160 && pixel_x < 320) {
     		//how you gonna find
+			Serial.println("K 37");
     	}
 
     	else if (pixel_y==5 && pixel_x>160 && pixel_x < 320) {
     		//how you gonna replace.
+			Serial.println("K 38");
     	}
 
     	else if (pixel_y==6 && pixel_x>160 && pixel_x < 320) {
-
     		//how you gonna undo.
+			Serial.println("K 39");
     	}
 
     	else if (pixel_y==0 && pixel_x>0 && pixel_x < 40) {
-
     		current_state=keyboard_view1;
     	}
 
     	else {
     		//what you want to do with redo
+			Serial.println("K 40");
     	}
 	}
 }

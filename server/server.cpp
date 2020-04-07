@@ -11,10 +11,9 @@
 using namespace std;
 
 int main() {
-
+  //VERY IMPORTANT THIS IS DONE CORRECTLY TRUE
   //Keyboard Serial
   SerialPort keyboardSerial("/dev/ttyACM0");
-
   //Screen Serial
   SerialPort screenSerial("/dev/ttyACM1");
 
@@ -36,7 +35,6 @@ int main() {
   */
   string keyboardRequest;
   string screenRequest;
-
   while(true){
     //Server running
 
