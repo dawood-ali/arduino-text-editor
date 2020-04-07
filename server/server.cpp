@@ -27,7 +27,7 @@ int main() {
   /*Line parsing from keyboard or screen
   Note:
     Keyboard sends characters to the server.
-    THE NEWLINE CHARACTER IS VERY IMPORTANT 
+    THE NEWLINE CHARACTER IS VERY IMPORTANT
     Keyboard inputs have the form:
       K char\n
 
