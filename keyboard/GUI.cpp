@@ -5,6 +5,7 @@
 #include <SD.h>
 #include <TouchScreen.h>
 #include <time.h>
+#include <String>
 
 #define SD_CS 10
 
@@ -114,14 +115,14 @@ void setup() {
 	tft.fillScreen(BLACK);
 	tft.println("Select Mode:");
 	tft.setTextSize(1);
-	
+
 	while (current_state==start_screen) {
 
 		TSPoint p= ts.getPoint();
 
 		pinMode(YP,OUTPUT);
   		pinMode(XM,OUTPUT);
-		
+
 		int background= tft.color565(r1-=2,g1-=2,b1-=2);
 
 		tft.setCursor(212,112);
@@ -228,7 +229,7 @@ void draw_keys() {
 
 void key_pressed() {
 
-	//NOTE: just send the index of the letters along with the state of capslock to 
+	//NOTE: just send the index of the letters along with the state of capslock to
 	//know which character has been pressed. So send index and caps_lock
 
 	TSPoint p= ts.getPoint();
@@ -255,6 +256,9 @@ void key_pressed() {
 
 		pixel_x=pixel_x/60;
 
+		String lineToSend = "k ";
+		bool subtract = false;
+
     	int pixel_y = map(p.x, TS_MAXY, TS_MINY, 0, 320);
     	pixel_y-=80;
     	pixel_y=pixel_y/60;
@@ -264,7 +268,16 @@ void key_pressed() {
     	int index= pixel_x + offset_y;
 
     	if (index<=25) {
-			if(index==0) Serial.println("K 0");
+				if (caps_lock && index < 26) {
+					subtract = true;
+					index+=26;
+				}
+				lineToSend+=String(index);
+				Serial.println(lineToSend);
+				if (subtract) {
+					index-=26;
+				}
+			/*if(index==0) Serial.println("K 0");
 			if(index==1) Serial.println("K 1");
 			if(index==2) Serial.println("K 2");
 			if(index==3) Serial.println("K 3");
@@ -289,7 +302,7 @@ void key_pressed() {
 			if(index==22) Serial.println("K 22");
 			if(index==23) Serial.println("K 23");
 			if(index==24) Serial.println("K 24");
-			if(index==25) Serial.println("K 25");
+			if(index==25) Serial.println("K 25");*/
 
     		if (!caps_lock) {
 
@@ -301,7 +314,7 @@ void key_pressed() {
     			if(cursor_x==480) {
     				cursor_x=0;
     				cursor_y+=18;
-    			} 
+    			}
     		}
 
     		else {
@@ -313,13 +326,14 @@ void key_pressed() {
     			if(cursor_x==480) {
     				cursor_x=0;
     				cursor_y+=18;
-    			} 
- 
+    			}
+
     		}
     	}
 
     	else if (index==26) {
-			Serial.println("K 26");
+				lineToSend+=String(index+26);
+				Serial.println(lineToSend);
 
     		if (!caps_lock) {
 
@@ -346,7 +360,7 @@ void key_pressed() {
 			Serial.println("K 28");
 
     		cursor_x+=12;
-    		
+
     		if (cursor_x==480) {
 
     			cursor_x=0;
@@ -396,7 +410,7 @@ void key_pressed() {
     	else {
     		current_state=keyboard_view2;
     	}
-    	
+
 	}
 
 };
@@ -406,7 +420,7 @@ void tool_bar() {
 	int box_location_x= 160;
 	int box_location_y=0;
 
-	//here you might need to send an ascii cause the young god is running low on fuel to 
+	//here you might need to send an ascii cause the young god is running low on fuel to
 	//devise a smart ass solution like key pressed.
 
 	tft.fillScreen(BLACK);
@@ -541,7 +555,7 @@ void tools_pressed() {
 
     	if(arrows_appear) {
 
-    		//write what you want to do with the arrows for selecting text. if you don't 
+    		//write what you want to do with the arrows for selecting text. if you don't
 
     		//get what I mean by that just call me.
     	}
