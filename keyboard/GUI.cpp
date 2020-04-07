@@ -259,17 +259,42 @@ void key_pressed() {
     	pixel_y-=80;
     	pixel_y=pixel_y/60;
 
-    	int offset_y= 8*int(pixel_y);
+    	int offset_y= 8 * int(pixel_y);
 
-    	int index= pixel_x +offset_y;
+    	int index= pixel_x + offset_y;
 
     	if (index<=25) {
-			Serial.println("K " + index);
+			if(index==0) Serial.println("K 0");
+			if(index==1) Serial.println("K 1");
+			if(index==2) Serial.println("K 2");
+			if(index==3) Serial.println("K 3");
+			if(index==4) Serial.println("K 4");
+			if(index==5) Serial.println("K 5");
+			if(index==6) Serial.println("K 6");
+			if(index==7) Serial.println("K 7");
+			if(index==8) Serial.println("K 8");
+			if(index==9) Serial.println("K 9");
+			if(index==10) Serial.println("K 10");
+			if(index==11) Serial.println("K 11");
+			if(index==12) Serial.println("K 12");
+			if(index==13) Serial.println("K 13");
+			if(index==14) Serial.println("K 14");
+			if(index==15) Serial.println("K 15");
+			if(index==16) Serial.println("K 16");
+			if(index==17) Serial.println("K 17");
+			if(index==18) Serial.println("K 18");
+			if(index==19) Serial.println("K 19");
+			if(index==20) Serial.println("K 20");
+			if(index==21) Serial.println("K 21");
+			if(index==22) Serial.println("K 22");
+			if(index==23) Serial.println("K 23");
+			if(index==24) Serial.println("K 24");
+			if(index==25) Serial.println("K 25");
 
     		if (!caps_lock) {
 
     			tft.setCursor(cursor_x,cursor_y);
-    			tft.print(keys[index]);
+    			// tft.print(keys[index]);
 
     			cursor_x+=12;
 
@@ -282,7 +307,7 @@ void key_pressed() {
     		else {
 
     			tft.setCursor(cursor_x,cursor_y);
-    			tft.print(char(keys[index]-32));
+    			// tft.print(char(keys[index]-32));
     			cursor_x+=12;
 
     			if(cursor_x==480) {
@@ -294,7 +319,7 @@ void key_pressed() {
     	}
 
     	else if (index==26) {
-			Serial.println("K " + index);
+			Serial.println("K 26");
 
     		if (!caps_lock) {
 
@@ -318,7 +343,7 @@ void key_pressed() {
     	}
 
     	else if(index==27 || index==28) {
-			Serial.println("K " + index);
+			Serial.println("K 28");
 
     		cursor_x+=12;
     		
@@ -330,7 +355,7 @@ void key_pressed() {
     	}
 
     	else if(index==30) {
-			Serial.println("K " + index);
+			Serial.println("K 30");
 
     		if(cursor_x==0) {
 
@@ -356,7 +381,7 @@ void key_pressed() {
     	}
 
     	else if(index==29) {
-			Serial.println("K " + index);
+			Serial.println("K 29");
 
     		//this is the return carrier, so just send the index 29 no need for ascii
 

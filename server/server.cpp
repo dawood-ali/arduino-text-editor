@@ -12,6 +12,7 @@ using namespace std;
 
 int main() {
   //VERY IMPORTANT THIS IS DONE CORRECTLY TRUE
+  //Plug in the key board arudino first to set AMC0
   //Keyboard Serial
   SerialPort keyboardSerial("/dev/ttyACM0");
   //Screen Serial
@@ -35,16 +36,24 @@ int main() {
   */
   string keyboardRequest;
   string screenRequest;
+
   while(true){
+
     //Server running
 
     //Parse Keyboard with 1 second timeout
-    keyboardRequest = keyboardSerial.readline(1000);
-    parseKeyBoardInput(keyboardRequest, screenSerial, keyboardSerial);
+    keyboardRequest = keyboardSerial.readline(50);
+    if(keyboardRequest.size()!=0){
+      parseKeyBoardInput(keyboardRequest, screenSerial, keyboardSerial);
+      keyboardRequest=""; //Empty request when done parsing
+    }
 
     //Parse Screen wiwth 1 second timeout
-    screenRequest = screenSerial.readline(1000);
-    parseScreenInput(screenRequest, screenSerial, keyboardSerial);
+    screenRequest = screenSerial.readline(50);
+    if(screenRequest.size()!=0){
+      parseScreenInput(screenRequest, screenSerial, keyboardSerial);
+      screenRequest = ""; //Empty request when done parsing
+    }
   }
 
   return 0;

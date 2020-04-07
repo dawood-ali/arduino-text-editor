@@ -5,7 +5,7 @@
 using namespace std;
 
 //Parse request from the keybord 
-void parseKeyBoardInput(string request, SerialPort screenSerial, SerialPort keyboardSerial){
+void parseKeyBoardInput(string& request, SerialPort& screenSerial, SerialPort& keyboardSerial){
     //For now simply reads the character and validates the request
     //Keyboard assumes request in form:
     // K <num>\n
@@ -18,90 +18,109 @@ void parseKeyBoardInput(string request, SerialPort screenSerial, SerialPort keyb
         
         // Alphabet
         if(val>=0 && val <=25 ){
-            string letter = keys[val] + "\n";
-            screenSerial.writeline(letter);
+            string letter(1, keys[val]);
+            screenSerial.writeline(letter + "\n");
 
             return;
         }
 
         // Caps
         if(val == 26){
-            screenSerial.writeline("caps");
+            screenSerial.writeline("caps\n");
 
             return;
         }
 
         // Space Bar
         if(val ==27 || val == 28){
-            screenSerial.writeline("space");
+            screenSerial.writeline(" \n");
 
             return;
         }
 
         // Enter word
         if(val == 29){
-            screenSerial.writeline("enter"); 
+            screenSerial.writeline("enter\n"); 
 
             return;           
         }
 
         // Delete
         if(val == 30){
-            screenSerial.writeline("delete");
+            screenSerial.writeline("delete\n");
+
+            return;
         }
 
         // -> arrow, Select 
         if(val == 31){
-            screenSerial.writeline("rarrow");
+            screenSerial.writeline("rarrow\n");
+
+            return;
         }
 
         // <- arrow, Select 
         if(val == 32){
-            screenSerial.writeline("larrow");
+            screenSerial.writeline("larrow\n");
+
+            return;
         }
 
         // Cut 
         if(val == 33){
-            screenSerial.writeline("cut");
+            screenSerial.writeline("cut\n");
+
+            return;
         }
 
         // Copy 
         if(val == 34){
-            screenSerial.writeline("copy");
+            screenSerial.writeline("copy\n");
+
+            return;
         }
 
         // Paste 
         if(val == 35){
-            screenSerial.writeline("paste");
+            screenSerial.writeline("paste\n");
+
+            return;
         }
 
         // Select
         if(val == 36){
-            screenSerial.writeline("select");
+            screenSerial.writeline("select\n");
+
+            return;
         }
 
         // Find
         if(val == 37){
-            screenSerial.writeline("find");
+            screenSerial.writeline("find\n");
+
+            return;
         }
 
         // Replace
         if(val == 38){
-            screenSerial.writeline("replace");
+            screenSerial.writeline("replace\n");
+
+            return;
         }
 
         // Undo
         if(val == 39){
-            screenSerial.writeline("undo");
+            screenSerial.writeline("undo\n");
+
+            return;
         }
 
         // Redo
         if(val == 40){
-            screenSerial.writeline("redo");
+            screenSerial.writeline("redo\n");
+
+            return;
         }
 
     }
-
-
-    request = ""; //Clearing the request after use
 }
