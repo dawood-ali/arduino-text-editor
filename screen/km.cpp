@@ -56,18 +56,8 @@ Sd2Card card;
 
 int cursor_x = 0; int cursor_y = 0;
 int page_num = 1;
+String file_names[20];
 
-/*
-TODO:
-Once server-side file IO is completed:
- implement Screen scrolling efficiently
-	Should I just maintain the same up to date string of the whole file on this end?
- implement the mode 2, based heavily on the restaurant scrollable list we can deal with this.
-
-Merge server side code with mine in terms of special chars.
-
-
-*/
 
 
 void status_message(const char* msg) {
@@ -244,14 +234,14 @@ void receiving_mode(){
 	}
 }
 
-bool get_files(&String file_names[20], &num_of_files){
-	String num_line
-	int num_of_files;
+bool get_files(int & num_of_files){
+	String num_line;
+	//int num_of_files;
 
 	//get Num from server
 	if(fillBuffer(num_line)){
 		if(num_line[0] == 'N'){
-			String num = line.substring(2);
+			String num = num_line.substring(2);
 			num_of_files = num.toInt();
 			Serial.println("A");
 		}
@@ -261,15 +251,20 @@ bool get_files(&String file_names[20], &num_of_files){
 	}
 
 	//get list of files
-	for(int i = 0;i<num_of_files;i++){
+	for(int i = 0;i<num_of_files+1;i++){
 		String temp;
 		if(fillBuffer(temp)){
-			file_names[i] = temp;
+			if(temp[0] == 'F'){
+				file_names[i] = temp.substring(2);
+				Serial.println("B");
+			}
+			
 		}
 		else{
-			return 0
+			return 0;
 		}
 	}
+	return 1;
 
 }
 
@@ -284,36 +279,62 @@ void select_file(){
 	*/
 
 	//We'll comm with Server to get number of files
-	String file_names[20];
+	
 
 	status_message("Files: ");
 	cursor_x = 0; cursor_y = 24;
+	int text_size = 4;
 	tft.setCursor(cursor_x,cursor_y);
-	tft.setTextSize(2);
+	tft.setTextSize(text_size);
 	tft.setTextColor(TFT_WHITE);
+	int x_increment = text_size*6; int y_increment = text_size*8;
 
 	int selection = 0;
 	bool selected = false;
 	int num_of_files = 0;
 
-	//Get list of files, protocol necessary?
-	while(!get_files(file_names,num_of_files));
-	Serial.print(num_of_files);
+	//Get list of files WITH PROTOCOL fuck man
+	while(!get_files(num_of_files));
+	
+	//Given list and num of files display that shi and all that jazz
+	//Honestly fuck receiving arrow keys from server for selection
+	//cant imlement without the two ardys
 
-
-	/*
+	for(int i = 0; i<num_of_files+1;i++){
+		tft.print(file_names[i]);
+		cursor_y+=y_increment;
+	}
+	cursor_y -=y_increment;
+	tft.setCursor(cursor_x,cursor_y);
+	tft.print("New File");
+	cursor_y+=y_increment;
 	while(!selected){
+		//Take care of touching the screen
+		TSPoint touch = ts.getPoint(); 
+		pinMode(YP, OUTPUT);
+		pinMode(XM, OUTPUT);
+		if (touch.z > MINPRESSURE && touch.z < MAXPRESSURE){
+			//int x_touch = map(touch.y, TS_MINX, TS_MAXX, tft.width(),0);
+			int y_touch = map(touch.x, TS_MAXY, TS_MINY, 0, tft.height());
+			//tft.println(x_touch);
+			//tft.println(y_touch);
+			tft.println(y_touch);
+			selection = (y_touch -24)%y_increment;
+			selected = true;
+			tft.println(selection);
 
-		cursor_x = 0; cursor_y = 24;
-		tft.setCursor(cursor_x,cursor_y);
-		for(int i = 0; i<19;i++){
-			if(selection<20-1){
-				//who knows
-			}
 		}
 
+		
 	}
-	*/
+	tft.println(num_of_files);
+	while(selected){
+
+	}
+
+	//if(selection == num_of)
+	
+
 
 }
 
@@ -324,12 +345,11 @@ int main() {
 
 	//Start receiving chars from the server
 	while(true){
-<<<<<<< HEAD
+
 		select_file();
 		//receiving_mode();
-=======
 		receiving_mode();		
->>>>>>> f34e27b437e72674cdba79d350f0ea48d24d4e7e
+
 	}
 	return 0;
 }
