@@ -103,8 +103,8 @@ void setup() {
 
 }
 
-bool fillBuffer(String& l, unsigned long long timeout = 3000){
-  char buffer[800];
+bool fillBuffer(String& l, unsigned long long timeout = 1000){
+  char buffer[40];
   uint8_t bufferLen = 0;
 
   char in_char;
@@ -121,7 +121,6 @@ bool fillBuffer(String& l, unsigned long long timeout = 3000){
       return true;
     }
   }
-
   return false;
 }
 
@@ -243,13 +242,42 @@ void receiving_mode(){
 	}
 }
 
+bool get_files(&String file_names[20], &num_of_files){
+	String num_line
+	int num_of_files;
+
+	//get Num from server
+	if(fillBuffer(num_line)){
+		if(num_line[0] == 'N'){
+			String num = line.substring(2);
+			num_of_files = num.toInt();
+			Serial.println("A");
+		}
+	}
+	else{
+		return 0;
+	}
+
+	//get list of files
+	for(int i = 0;i<num_of_files;i++){
+		String temp;
+		if(fillBuffer(temp)){
+			file_names[i] = temp;
+		}
+		else{
+			return 0
+		}
+	}
+
+}
+
 
 void select_file(){
 	/*Getnames of files, display them in a scrollable
 	list and send the name of the file back to server. 
 	
 	*NOT EVEN CLOSE TO CORRECT RN
-	**How much of the file should be displayed? Last half-screen?\
+	**How much of the file should be displayed? Last half-screen?
 	**How will they be scrolling through this list.
 	*/
 
@@ -263,11 +291,15 @@ void select_file(){
 	tft.setTextColor(TFT_WHITE);
 
 	int selection = 0;
-	int page_number = 0;
-	int max_page = 20/19; //n/19
 	bool selected = false;
-	bool page_change = false;
-	
+	int num_of_files = 0;
+
+	//Get list of files, protocol necessary?
+	while(!get_files(file_names,num_of_files));
+	Serial.print(num_of_files);
+
+
+	/*
 	while(!selected){
 
 		cursor_x = 0; cursor_y = 24;
@@ -279,6 +311,7 @@ void select_file(){
 		}
 
 	}
+	*/
 
 }
 
@@ -289,7 +322,8 @@ int main() {
 
 	//Start receiving chars from the server
 	while(true){
-		receiving_mode();
+		select_file();
+		//receiving_mode();
 	}
 	return 0;
 }
