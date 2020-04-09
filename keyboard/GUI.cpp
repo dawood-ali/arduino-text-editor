@@ -5,6 +5,7 @@
 #include <SD.h>
 #include <TouchScreen.h>
 #include <time.h>
+#include <String>
 
 #define SD_CS 10
 
@@ -76,8 +77,8 @@ char Select[7]={"Select"};
 char Cut[4]={"Cut"};
 char Copy[5]={"Copy"};
 char Paste[6]={"Paste"};
-char Find[5]= {"Find"};
-char Replace[8]={"Replace"};
+char Save[6]= {"Save"};
+char Open[6]={"Open"};
 char Undo[5]={"Undo"};
 char Redo[5]= {"Redo"};
 
@@ -114,14 +115,14 @@ void setup() {
 	tft.fillScreen(BLACK);
 	tft.println("Select Mode:");
 	tft.setTextSize(1);
-	
+
 	while (current_state==start_screen) {
 
 		TSPoint p= ts.getPoint();
 
 		pinMode(YP,OUTPUT);
   		pinMode(XM,OUTPUT);
-		
+
 		int background= tft.color565(r1-=2,g1-=2,b1-=2);
 
 		tft.setCursor(212,112);
@@ -228,7 +229,7 @@ void draw_keys() {
 
 void key_pressed() {
 
-	//NOTE: just send the index of the letters along with the state of capslock to 
+	//NOTE: just send the index of the letters along with the state of capslock to
 	//know which character has been pressed. So send index and caps_lock
 
 	TSPoint p= ts.getPoint();
@@ -255,44 +256,85 @@ void key_pressed() {
 
 		pixel_x=pixel_x/60;
 
+		String lineToSend = "K ";
+		bool subtract = false;
+
     	int pixel_y = map(p.x, TS_MAXY, TS_MINY, 0, 320);
     	pixel_y-=80;
     	pixel_y=pixel_y/60;
 
-    	int offset_y= 8*int(pixel_y);
+    	int offset_y= 8 * int(pixel_y);
 
-    	int index= pixel_x +offset_y;
+    	int index= pixel_x + offset_y;
 
     	if (index<=25) {
+				if (caps_lock && index < 26) {
+					subtract = true;
+					index+=26;
+				}
+				lineToSend+=String(index);
+				Serial.println(lineToSend);
+				if (subtract) {
+					index-=26;
+				}
+			/*if(index==0) Serial.println("K 0");
+			if(index==1) Serial.println("K 1");
+			if(index==2) Serial.println("K 2");
+			if(index==3) Serial.println("K 3");
+			if(index==4) Serial.println("K 4");
+			if(index==5) Serial.println("K 5");
+			if(index==6) Serial.println("K 6");
+			if(index==7) Serial.println("K 7");
+			if(index==8) Serial.println("K 8");
+			if(index==9) Serial.println("K 9");
+			if(index==10) Serial.println("K 10");
+			if(index==11) Serial.println("K 11");
+			if(index==12) Serial.println("K 12");
+			if(index==13) Serial.println("K 13");
+			if(index==14) Serial.println("K 14");
+			if(index==15) Serial.println("K 15");
+			if(index==16) Serial.println("K 16");
+			if(index==17) Serial.println("K 17");
+			if(index==18) Serial.println("K 18");
+			if(index==19) Serial.println("K 19");
+			if(index==20) Serial.println("K 20");
+			if(index==21) Serial.println("K 21");
+			if(index==22) Serial.println("K 22");
+			if(index==23) Serial.println("K 23");
+			if(index==24) Serial.println("K 24");
+			if(index==25) Serial.println("K 25");*/
 
     		if (!caps_lock) {
 
     			tft.setCursor(cursor_x,cursor_y);
-    			tft.print(keys[index]);
+    			// tft.print(keys[index]);
 
     			cursor_x+=12;
 
     			if(cursor_x==480) {
     				cursor_x=0;
     				cursor_y+=18;
-    			} 
+    			}
     		}
 
     		else {
 
     			tft.setCursor(cursor_x,cursor_y);
-    			tft.print(char(keys[index]-32));
+    			// tft.print(char(keys[index]-32));
     			cursor_x+=12;
 
     			if(cursor_x==480) {
     				cursor_x=0;
     				cursor_y+=18;
-    			} 
- 
+    			}
+
     		}
     	}
 
     	else if (index==26) {
+				lineToSend+=String(index+26);
+				Serial.println(lineToSend);
+
     		if (!caps_lock) {
 
     			caps_lock=1;
@@ -315,9 +357,11 @@ void key_pressed() {
     	}
 
     	else if(index==27 || index==28) {
+				lineToSend+=String(index+26);
+				Serial.println(lineToSend);
 
     		cursor_x+=12;
-    		
+
     		if (cursor_x==480) {
 
     			cursor_x=0;
@@ -326,6 +370,8 @@ void key_pressed() {
     	}
 
     	else if(index==30) {
+				lineToSend+=String(index+26);
+				Serial.println(lineToSend);
 
     		if(cursor_x==0) {
 
@@ -351,6 +397,8 @@ void key_pressed() {
     	}
 
     	else if(index==29) {
+				lineToSend+=String(index+26);
+				Serial.println(lineToSend);
 
     		//this is the return carrier, so just send the index 29 no need for ascii
 
@@ -365,7 +413,7 @@ void key_pressed() {
     	else {
     		current_state=keyboard_view2;
     	}
-    	
+
 	}
 
 };
@@ -375,7 +423,7 @@ void tool_bar() {
 	int box_location_x= 160;
 	int box_location_y=0;
 
-	//here you might need to send an ascii cause the young god is running low on fuel to 
+	//here you might need to send an ascii cause the young god is running low on fuel to
 	//devise a smart ass solution like key pressed.
 
 	tft.fillScreen(BLACK);
@@ -408,10 +456,10 @@ void tool_bar() {
 	tft.print(Cut);
 
 	tft.setCursor(text_location_x,text_location_y+160);
-	tft.print(Find);
+	tft.print(Save);
 
 	tft.setCursor(text_location_x,text_location_y+200);
-	tft.print(Replace);
+	tft.print(Open);
 
 	tft.setCursor(text_location_x,text_location_y+240);
 	tft.print(Undo);
@@ -510,45 +558,60 @@ void tools_pressed() {
 
     	if(arrows_appear) {
 
-    		//write what you want to do with the arrows for selecting text. if you don't 
+    		//write what you want to do with the arrows for selecting text. if you don't
 
     		//get what I mean by that just call me.
+				arrow left:
+				120 to 160, pixel y = 0
+				arrow right:
+				320 to 360, y = 0
+
+				if(pixel_y==0 && pixel_x>120 && pixel_x < 160) {
+					Serial.println("K 31");
+	    		//how you gonna copy cuz idk.
+	    	}else if(pixel__y==0 && pixel_x>320 && pixel_x < 360) {
+					Serial.println("K 32")
+				}
+
     	}
 
     	else if(pixel_y==1 && pixel_x>160 && pixel_x < 320) {
-
     		//how you gonna copy cuz idk.
+			Serial.println("K 34");
     	}
 
     	else if (pixel_y==2 && pixel_x>160 && pixel_x < 320) {
-
     		//how you gonna paste
+			Serial.println("K 35");
     	}
 
     	else if (pixel_y==3 && pixel_x>160 && pixel_x < 320) {
     		//how you gonna cut
+			Serial.println("K 33");
     	}
 
     	else if (pixel_y==4 && pixel_x>160 && pixel_x < 320) {
-    		//how you gonna find
+    		//how you gonna Save
+			Serial.println("K 37");
     	}
 
     	else if (pixel_y==5 && pixel_x>160 && pixel_x < 320) {
-    		//how you gonna replace.
+    		//how you gonna Open.
+			Serial.println("K 38");
     	}
 
     	else if (pixel_y==6 && pixel_x>160 && pixel_x < 320) {
-
     		//how you gonna undo.
+			Serial.println("K 39");
     	}
 
     	else if (pixel_y==0 && pixel_x>0 && pixel_x < 40) {
-
     		current_state=keyboard_view1;
     	}
 
     	else {
     		//what you want to do with redo
+			Serial.println("K 40");
     	}
 	}
 }

@@ -14,15 +14,13 @@ int endIndex; // Index of the end of the file.
 
 // Holds the contents that you want copied or cut from the string.
 string copiedContents;
-string curContents;
 
 bool toggleSelect = false;
 
 // Current filename, to be changed when dealing with other files.
 string curFileName;
 
-// fobidden characters for naming a file
-string forbiddenChars = ".<>:\"/\\|?*";
+string masterTextFile = "TextFileMaster.txt";
 
 /*
 Naming Scheme:
@@ -64,71 +62,6 @@ Input:
 Outputs:
   whether the given filename is valid given the conditions
 */
-bool isValidfName(string fName) {
-  bool invalidChars = false;
-  for (auto i : forbiddenChars) {
-    if (fName.find(i) != string::npos) {
-      invalidChars = true;
-      break;
-    }
-  }
-  if (invalidChars) {
-    cout << "there are invalid Characters, please do not use any of the following characters when naming a file: " << forbiddenChars << endl;
-    return false;
-  }
-  if (fexists(fName)) {
-    cout << "dis is error, filename exists" << endl;
-    return false;
-  }
-  return true;
-}
-
-// given all the above functions hold true, we can create the file
-void createFile() {
-  ofstream outfile(curFileName);
-  outfile.close();
-}
-
-// returns a string with all the contents of a text file
-// This currently only works with files that are known to be in the folder.
-string readContents() {
-  string contents;
-
-  ifstream file(curFileName);
-
-  file.seekg(0, ios::end);
-  contents.reserve(file.tellg());
-  curIndex = file.tellg();
-  curIndex--;
-  file.seekg(0, ios::beg);
-
-  contents.assign((std::istreambuf_iterator<char>(file)), std::istreambuf_iterator<char>());
-
-  return contents;
-}
-
-// This function, Will save the contents of the string to a .txt file.
-void updateContents() {
-  ofstream fileObject;
-  fileObject.open(curFileName, ofstream::out | ofstream::trunc);
-  // fileObject.write(curContents.c_str(),curContents.size());
-  fileObject << curContents;
-  fileObject.close();
-}
-
-/*
-This function does currently nothing
-*/
-// discuss with ahmed the best way of sending each character.
-void sendText() {
-  //text character limit??
-
-  /*
-  for (auto character : curContents) {
-    cout << character;
-  }
-  cout << endl;*/
-}
 
 // decides what to do with given ascii  (copy/paste functionality)
 void copy_paste_index_functionality(int val) {
@@ -186,40 +119,30 @@ void copy_paste_index_functionality(int val) {
       cEnd = curIndex + 1;
       cStart = curIndex + 1;
     }
+  }else if (val == 249) // redo
+  {
+
   }
 }
 
-
-/* CODE FROM MAIN.CPP
-  curFileName = "AhmedIsGay";
-  // cout << curFileName << endl;
-  if (isValidfName(curFileName)) {
-    cout << "we good" << endl;
-    curFileName+=".txt";
-  }else{
-    cout << "we aint so good" << endl;
-    return 0;
+int main() {
+  curFileName = "AhmedIsGay.txt";
+  FileManager curFile;
+  if (curFile.isValidfName(curFileName)) {
+    curFile.setFileName(curFileName);
+  }else {
+    curFileName = "AhmedIsGay";
+    if (curFile.isValidfName(curFileName)) {
+      curFile.setFileName(curFileName);
+    }
   }
-  createFile();
-  curContents = "poop";
-  updateContents();
-  */
+  int endIndex = curFileName.length();
+  cout << "before: " << curFileName << endl;
+  endIndex--;
+  curFileName.erase(endIndex);
+  cout << "after: " << curFileName << endl;
 
 
- //fillScreen(curFileName);
 
 
-
-  /*
-  fstream curFile;
-  char charToAdd = 'A';
-  curFile.open(curFileName);
-  if (curFile.is_open()) {
-    curFile.put(charToAdd);
-  }
-  curFile.close();
-  ofstream outfile;
-  outfile.open(curFileName,ios_base::app);
-  outfile << 'w';
-  outfile.close();
-  */
+}

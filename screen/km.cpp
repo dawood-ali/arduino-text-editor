@@ -235,6 +235,8 @@ void receiving_mode(){
 
       			cursor_forward();
 			}
+
+			Serial.println("S");
 		}
 		//cursor is updated,but still in loop. Lets draw cursor
 		tft.print("|");
@@ -322,8 +324,12 @@ int main() {
 
 	//Start receiving chars from the server
 	while(true){
+<<<<<<< HEAD
 		select_file();
 		//receiving_mode();
+=======
+		receiving_mode();		
+>>>>>>> f34e27b437e72674cdba79d350f0ea48d24d4e7e
 	}
 	return 0;
 }
