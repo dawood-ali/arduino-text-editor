@@ -77,8 +77,8 @@ char Select[7]={"Select"};
 char Cut[4]={"Cut"};
 char Copy[5]={"Copy"};
 char Paste[6]={"Paste"};
-char Find[5]= {"Find"};
-char Replace[8]={"Replace"};
+char Save[6]= {"Save"};
+char Open[6]={"Open"};
 char Undo[5]={"Undo"};
 char Redo[5]= {"Redo"};
 
@@ -256,7 +256,7 @@ void key_pressed() {
 
 		pixel_x=pixel_x/60;
 
-		String lineToSend = "k ";
+		String lineToSend = "K ";
 		bool subtract = false;
 
     	int pixel_y = map(p.x, TS_MAXY, TS_MINY, 0, 320);
@@ -357,7 +357,8 @@ void key_pressed() {
     	}
 
     	else if(index==27 || index==28) {
-			Serial.println("K 28");
+				lineToSend+=String(index+26);
+				Serial.println(lineToSend);
 
     		cursor_x+=12;
 
@@ -369,7 +370,8 @@ void key_pressed() {
     	}
 
     	else if(index==30) {
-			Serial.println("K 30");
+				lineToSend+=String(index+26);
+				Serial.println(lineToSend);
 
     		if(cursor_x==0) {
 
@@ -395,7 +397,8 @@ void key_pressed() {
     	}
 
     	else if(index==29) {
-			Serial.println("K 29");
+				lineToSend+=String(index+26);
+				Serial.println(lineToSend);
 
     		//this is the return carrier, so just send the index 29 no need for ascii
 
@@ -453,10 +456,10 @@ void tool_bar() {
 	tft.print(Cut);
 
 	tft.setCursor(text_location_x,text_location_y+160);
-	tft.print(Find);
+	tft.print(Save);
 
 	tft.setCursor(text_location_x,text_location_y+200);
-	tft.print(Replace);
+	tft.print(Open);
 
 	tft.setCursor(text_location_x,text_location_y+240);
 	tft.print(Undo);
@@ -558,6 +561,18 @@ void tools_pressed() {
     		//write what you want to do with the arrows for selecting text. if you don't
 
     		//get what I mean by that just call me.
+				arrow left:
+				120 to 160, pixel y = 0
+				arrow right:
+				320 to 360, y = 0
+
+				if(pixel_y==0 && pixel_x>120 && pixel_x < 160) {
+					Serial.println("K 31");
+	    		//how you gonna copy cuz idk.
+	    	}else if(pixel__y==0 && pixel_x>320 && pixel_x < 360) {
+					Serial.println("K 32")
+				}
+
     	}
 
     	else if(pixel_y==1 && pixel_x>160 && pixel_x < 320) {
@@ -576,12 +591,12 @@ void tools_pressed() {
     	}
 
     	else if (pixel_y==4 && pixel_x>160 && pixel_x < 320) {
-    		//how you gonna find
+    		//how you gonna Save
 			Serial.println("K 37");
     	}
 
     	else if (pixel_y==5 && pixel_x>160 && pixel_x < 320) {
-    		//how you gonna replace.
+    		//how you gonna Open.
 			Serial.println("K 38");
     	}
 
