@@ -269,18 +269,12 @@ bool get_files(int & num_of_files){
 }
 
 
-void select_file(){
-	/*Getnames of files, display them in a scrollable
-	list and send the name of the file back to server. 
-	
-	*NOT EVEN CLOSE TO CORRECT RN
-	**How much of the file should be displayed? Last half-screen?
-	**How will they be scrolling through this list.
+bool select_file(){
+	/*Getnames of files, display them and allow user to make selection
+	Send selection back to server and load the file
 	*/
 
 	//We'll comm with Server to get number of files
-	
-
 	status_message("Files: ");
 	cursor_x = 0; cursor_y = 24;
 	int text_size = 4;
@@ -296,6 +290,7 @@ void select_file(){
 	//Get list of files WITH PROTOCOL fuck man
 	while(!get_files(num_of_files));
 	
+
 	//Given list and num of files display that shi and all that jazz
 	//Honestly fuck receiving arrow keys from server for selection
 	//cant imlement without the two ardys
@@ -308,6 +303,9 @@ void select_file(){
 	tft.setCursor(cursor_x,cursor_y);
 	tft.print("New File");
 	cursor_y+=y_increment;
+	
+	
+
 	while(!selected){
 		//Take care of touching the screen
 		TSPoint touch = ts.getPoint(); 
@@ -318,23 +316,103 @@ void select_file(){
 			int y_touch = map(touch.x, TS_MAXY, TS_MINY, 0, tft.height());
 			//tft.println(x_touch);
 			//tft.println(y_touch);
-			tft.println(y_touch);
-			selection = (y_touch -24)%y_increment;
+			//tft.println(y_touch);
+			selection = (y_touch -24)/y_increment;
 			selected = true;
-			tft.println(selection);
+			//tft.println(selection);
 
 		}
+		
+	}
+	//tft.println(num_of_files);
+	
+	
+	
+	//Send the selection back
+	bool received = false;
+
+	
+	while(!received){
+		
+		Serial.print("N ");
+		Serial.println(selection);
+		String tempA;
+		
+		if(fillBuffer(tempA)){
+			if(tempA[0] == "A"){
+				received = true;
+			}
+		}
+		
+	}
+	
+
+	
+	if(selection == num_of_files){
+		//If they decide to open a new txtfile
+		tft.fillScreen(BLACK);
+		status_message("New File Name? ");
+		text_size =2;
+		tft.setTextSize(text_size);
+		tft.setTextColor(TFT_BLACK,TFT_WHITE);
+		cursor_x = 15*12; cursor_y = 4;
+		tft.setCursor(cursor_x,cursor_y);
+		int x_increment = text_size*6; int y_increment = text_size*8;
+
+
+		//get this fucking name
+		bool finished = false;
+		while(!finished){
+			if(Serial.available()){
+				// read the incoming byte:
+				int in_ascii = Serial.read();
+				char in_char = in_ascii;
+				//Received a char. Now print to screen being mindful of cursor location
+      			//tft.setCursor(cursor_x,cursor_y);
+      			if(in_ascii == 8){//backspace
+					tft.fillRect(cursor_x,cursor_y,x_increment,y_increment,TFT_WHITE);
+					cursor_back();
+					tft.fillRect(cursor_x,cursor_y,x_increment,y_increment,TFT_WHITE);	
+				}
+				else if(in_ascii == 33){
+					//We need to determine a button that signifies the end,
+					//Prob same ascii we decide is enter.
+					//for now it is !.
+
+					finished = true;
+				}
+      			else{
+      				
+	      			//tft.fillRect(cursor_x,cursor_y,x_increment,y_increment,TFT_WHITE);
+	      			tft.print(in_char);
+	      			cursor_forward();
+	      		}
+			}
+		}
+
+		//The server should have the name at this point and created the file
+		//We can start typing with the name of the file up at the top
+		while(!fillBuffer(file_names[selection]));
+		//status_message("Editing" + file_names[selection])
+		return 1;
+
+	}
+
+	else{
+		//They chose an existing file
+		String temp = file_names[selection];
+		status_message(temp.c_str());
+		cursor_x = 0; cursor_y = 24;
+		tft.setCursor(cursor_x,cursor_y);
+
+		return 1;
 
 		
 	}
-	tft.println(num_of_files);
-	while(selected){
 
-	}
 
-	//if(selection == num_of)
+
 	
-
 
 }
 
@@ -345,8 +423,9 @@ int main() {
 
 	//Start receiving chars from the server
 	while(true){
+		Serial.flush();
 
-		select_file();
+		while(!select_file());
 		//receiving_mode();
 		receiving_mode();		
 
