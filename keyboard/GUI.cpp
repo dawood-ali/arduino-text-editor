@@ -5,7 +5,7 @@
 #include <SD.h>
 #include <TouchScreen.h>
 #include <time.h>
-#include <String>
+//#include <String>
 
 #define SD_CS 10
 
@@ -256,7 +256,7 @@ void key_pressed() {
 
 		pixel_x=pixel_x/60;
 
-		String lineToSend = "K ";
+		//String lineToSend = "K ";
 		bool subtract = false;
 
     	int pixel_y = map(p.x, TS_MAXY, TS_MINY, 0, 320);
@@ -272,8 +272,9 @@ void key_pressed() {
 					subtract = true;
 					index+=26;
 				}
-				lineToSend+=String(index);
-				Serial.println(lineToSend);
+				//lineToSend+=String(index);
+				Serial.print("K ");
+				Serial.println(index);
 				if (subtract) {
 					index-=26;
 				}
