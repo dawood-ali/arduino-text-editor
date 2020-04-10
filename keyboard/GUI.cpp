@@ -255,8 +255,6 @@ void key_pressed() {
 		int pixel_x = map(p.y,TS_MINX,TS_MAXX,480,0);
 
 		pixel_x=pixel_x/60;
-
-		//String lineToSend = "K ";
 		bool subtract = false;
 
     	int pixel_y = map(p.x, TS_MAXY, TS_MINY, 0, 320);
@@ -272,7 +270,6 @@ void key_pressed() {
 					subtract = true;
 					index+=26;
 				}
-				//lineToSend+=String(index);
 				Serial.print("K ");
 				Serial.println(index);
 				if (subtract) {
