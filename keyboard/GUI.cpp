@@ -559,10 +559,6 @@ void tools_pressed() {
     		//write what you want to do with the arrows for selecting text. if you don't
 
     		//get what I mean by that just call me.
-				arrow left:
-				120 to 160, pixel y = 0
-				arrow right:
-				320 to 360, y = 0
 
 				if(pixel_y==0 && pixel_x>120 && pixel_x < 160) {
 					Serial.println("K 31");
