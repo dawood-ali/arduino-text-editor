@@ -7,6 +7,8 @@
 #include <stdlib.h>
 #include <time.h>
 
+#include <iostream>
+
 SerialPort::SerialPort(const char *portName) {
   fd = open(portName, O_RDWR | O_NOCTTY);
   if (fd == -1) {
@@ -37,7 +39,7 @@ SerialPort::~SerialPort() {
   close(fd);
 }
 
-string SerialPort::readline(int timeout) {
+string SerialPort::readline(int timeout ) {
   string line = "";
   int avail;
   char c;
@@ -70,5 +72,6 @@ string SerialPort::readline(int timeout) {
 }
 
 bool SerialPort::writeline(const string& line) {
+  cout << line;
   return write(fd, line.c_str(), line.length());
 }
