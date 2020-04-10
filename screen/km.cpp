@@ -319,12 +319,12 @@ bool select_file(){
 			//tft.println(y_touch);
 			selection = (y_touch -24)/y_increment;
 			selected = true;
-			//tft.println(selection);
+			tft.println(selection);
 
 		}
 		
 	}
-	//tft.println(num_of_files);
+	tft.println(num_of_files);
 	
 	
 	
@@ -339,13 +339,17 @@ bool select_file(){
 		String tempA;
 		
 		if(fillBuffer(tempA)){
-			if(tempA[0] == "A"){
+			if(tempA[0] == 'A'){
 				received = true;
 			}
 		}
 		
 	}
-	
+
+	if(selection != num_of_files){
+		tft.println(selection);
+		tft.println(num_of_files);
+	}
 
 	
 	if(selection == num_of_files){
@@ -392,7 +396,7 @@ bool select_file(){
 
 		//The server should have the name at this point and created the file
 		//We can start typing with the name of the file up at the top
-		while(!fillBuffer(file_names[selection]));
+		//while(!fillBuffer(file_names[selection]));
 		//status_message("Editing" + file_names[selection])
 		return 1;
 

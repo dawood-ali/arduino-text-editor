@@ -55,7 +55,7 @@ bool kys(){
       chosenFileIndex = numFiles + 2;
       // send num to ahmed;
       screenSerial.writeline("N "+to_string(numFiles)+"\n"); // do we need a protocol??
-      //cout<<to_string(numFiles)<<endl;
+      cout<<to_string(numFiles)<<endl;
       // wait for affirmation from the arduino.
       screenRequest = screenSerial.readline(1000);
       cout << screenRequest<<endl;
@@ -91,13 +91,18 @@ bool kys(){
             cout<<kmfs_int<<endl;
             if(kmfs_int == numFiles){
               //New file
+              cout<<kmfs_int<<endl;
               chosenFileIndex = numFiles;
-              screenSerial.writeline("A");
+              screenSerial.writeline("A \n");
+
 
               //Accept chars from keyboard to type the textfile name
               //Send those chars to screen, when they hit enter we assume theyre done typing
               //Once theyre done typing send that whole name as one string to screen.
               //Also add that testname to the end of this txt file
+              while(true){
+                
+              }
               string testfilename = "WaltzisWhite.txt";
               /*
               while (!file.isValidfName(testfilename)) {
@@ -108,6 +113,7 @@ bool kys(){
 
              
               selected = true;
+              return 1;
 
             }
             else if(kmfs_int < numFiles){
