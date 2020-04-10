@@ -647,7 +647,7 @@ void tools_pressed() {
 
     		font_size=0;
 
-    		Serial.print("SMALLER");
+    		//Serial.print("SMALLER");
 
     		//SEND A COMMAND FOR reducing FONTSIZE
 
@@ -657,7 +657,7 @@ void tools_pressed() {
 
     		font_size=1;
 
-    		Serial.print("BIGGER");
+    		//Serial.print("BIGGER");
     		
     		//SEND A COMMAND FOR INCREASING FONTSIZE
     	}
