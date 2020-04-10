@@ -52,12 +52,10 @@ class FileManager{
       }
 
       string readContents() {
-        ifstream file(filename);
+        ifstream file("textfiles/" + filename);
 
         file.seekg(0, ios::end);
         contents.reserve(file.tellg());
-        curIndex = file.tellg();
-        curIndex--;
         file.seekg(0, ios::beg);
 
         contents.assign((std::istreambuf_iterator<char>(file)), std::istreambuf_iterator<char>());

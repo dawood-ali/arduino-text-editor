@@ -85,7 +85,7 @@ bool kys(){
             string temp = screenRequest[2];
             int temp2 = stoi(temp);
             cout<<temp2<<endl;
-           */ 
+           */
             string kmfs = screenRequest.substr(2);
             int kmfs_int = stoi(kmfs);
             cout<<kmfs_int<<endl;
@@ -101,9 +101,9 @@ bool kys(){
               //Once theyre done typing send that whole name as one string to screen.
               //Also add that testname to the end of this txt file
               while(true){
-                
+
               }
-              string testfilename = "WaltzisWhite.txt";
+              string testfilename = "WaltzisWhite.txt"; // nice
               /*
               while (!file.isValidfName(testfilename)) {
                 // request other file name
@@ -111,7 +111,7 @@ bool kys(){
               file.setFileName(testfilename);
               file.createFile();
 
-             
+
               selected = true;
               return 1;
 
@@ -143,7 +143,7 @@ bool kys(){
               cout<<"Ive spent 3 hours debugging this fucking shit"<<endl;
 
               screenSerial.writeline(fileContents);
-              
+
               /*
               for (auto letter : fileContents) {
                 if (letter != '\n') {
@@ -171,5 +171,5 @@ int main() {
   //Keyboard Serial
   //SerialPort keyboardSerial("/dev/ttyACM0");
   while(!kys());
-  
+
 }
