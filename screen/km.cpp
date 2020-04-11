@@ -94,6 +94,7 @@ void setup() {
 }
 
 bool fillBuffer(String& l, unsigned long long timeout = 1000){
+	//Receive a line from the Serial
   char buffer[20];
   uint8_t bufferLen = 0;
 
@@ -115,7 +116,7 @@ bool fillBuffer(String& l, unsigned long long timeout = 1000){
 }
 
 void page_change(bool back = false){
-	//hmm
+	//change page of text
 	tft.setTextWrap(true);
 	tft.setCursor(0,0);
 	cursor_x = 0;cursor_y = 0;
@@ -154,7 +155,7 @@ void cursor_forward(int text_size = 2){
 }
 
 void cursor_back(int text_size = 2){
-	//If necessary wraparound back around the line without going into the header.
+	//Decrement cursor location. If necessary wraparound back around the line without going into the header.
 	int x_increment = text_size*6; int y_increment = text_size*8;
 	if(cursor_x == 0){
 		if(cursor_y >24){ 
@@ -174,12 +175,11 @@ void cursor_back(int text_size = 2){
 }
 
 void receiving_mode(){
-	/*This mode is responsible for receiving text and displaying it onto the screen.
+	/*This mode is responsible for receiving text and displaying it onto the screen while editing a text file.
 	Note: It assumes that it should begin writing where cursor_x and cursor_y indicates.
 	
 	*/
 
-	//Built-in ez way to make font-size variable if we want.
 	int text_size = 2;
 	
 	tft.setTextColor(TFT_WHITE);
@@ -189,7 +189,6 @@ void receiving_mode(){
 
 
 	//Continuously read chars from Serial until we need to break outta here.
-	//ALWAYS CLEAR CURSOR BEFORE PRINTING A CHAR.
 	bool breakout = false;
 	while(!breakout){
 		//at this point both cursors (tft and our vars) are at start of next char.
@@ -198,27 +197,19 @@ void receiving_mode(){
 			int in_ascii = Serial.read();
 			char in_char = in_ascii;
 
-			//String temp(in_ascii);
-			//tft.print(temp);
-
-			//WARNING: ASCII on arduino is not normal.
-			// if(in_ascii < 48 && in_ascii != 32 ){//temp comment: change to >123 for max letter (?). 
-				//you got yourself a special character indicating an operation. 
 
 
-			if(in_char == '0'){ //example this is !
-				//This could be where I call the function to goto mode two and get that file 
-				// breakout = true;
+			if(in_char == '0'){ //enter
 				cursor_x = 0;
 				cursor_y += y_increment;
 				tft.setCursor(cursor_x, cursor_y);
 			}
 
-			else if(in_char == '1'){//backspace
+			else if(in_char == '1'){//backspace.
 				tft.fillRect(cursor_x,cursor_y,x_increment,y_increment,TFT_BLACK);
 				cursor_back();
 				tft.fillRect(cursor_x,cursor_y,x_increment,y_increment,TFT_BLACK);	
-			}else if(in_char=='9'){
+			}else if(in_char=='9'){//open or save. goto file manager.
 				breakout = true;
 				tft.fillScreen(TFT_BLACK);
 				Serial.println("O");
@@ -243,6 +234,7 @@ void receiving_mode(){
 }
 
 bool get_files(int & num_of_files){
+	//Get list of files from server using agreed upon protocol.
 	String num_line;
 	//int num_of_files;
 
@@ -278,7 +270,7 @@ bool get_files(int & num_of_files){
 
 bool select_file(){
 	/*Getnames of files, display them and allow user to make selection
-	Send selection back to server and load the file
+	Send selection back to server and load the file.
 	*/
 
 	//We'll comm with Server to get number of files
@@ -295,13 +287,12 @@ bool select_file(){
 	bool selected = false;
 	int num_of_files = 0;
 
-	//Get list of files WITH PROTOCOL fuck man
+	//Get list of files WITH PROTOCOL 
 	while(!get_files(num_of_files));
 	
 
 	//Given list and num of files display that shi and all that jazz
-	//Honestly fuck receiving arrow keys from server for selection
-	//cant imlement without the two ardys
+
 
 	for(int i = 0; i<num_of_files+1;i++){
 		tft.print(file_names[i]);
@@ -353,11 +344,6 @@ bool select_file(){
 		
 	}
 
-	// if(selection != num_of_files){
-	// 	tft.println(selection);
-	// 	tft.println(num_of_files);
-	// }
-
 	
 	if(selection == num_of_files){
 		//If they decide to open a new txtfile
@@ -386,9 +372,7 @@ bool select_file(){
 					tft.fillRect(cursor_x,cursor_y,x_increment,y_increment,TFT_WHITE);	
 				}
 				else if(in_char == '0'){
-					//We need to determine a button that signifies the end,
-					//Prob same ascii we decide is enter.
-					//for now it is !.
+					//Done choosing name.
 
 					finished = true;
 					tft.setCursor(0,24);
@@ -406,16 +390,14 @@ bool select_file(){
 
 		//The server should have the name at this point and created the file
 		//We can start typing with the name of the file up at the top
-		//while(!fillBuffer(file_names[selection]));
-		//status_message("Editing" + file_names[selection])
+		
 		return 1;
 
 	}
 
 	else{
 		//They chose an existing file
-		// String temp = file_names[selection];
-		// status_message(temp.c_str());
+		// Move into receiving mode to load contents and allow editing.
 		tft.fillScreen(TFT_BLACK);
 		status_message("Editing...");
 		cursor_x = 0; cursor_y = 24;
