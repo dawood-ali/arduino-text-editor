@@ -94,7 +94,7 @@ void setup() {
 }
 
 bool fillBuffer(String& l, unsigned long long timeout = 1000){
-  char buffer[40];
+  char buffer[20];
   uint8_t bufferLen = 0;
 
   char in_char;
@@ -181,6 +181,7 @@ void receiving_mode(){
 
 	//Built-in ez way to make font-size variable if we want.
 	int text_size = 2;
+	
 	tft.setTextColor(TFT_WHITE);
 	//tft.setTextWrap(true);
 	tft.setTextSize(text_size);
@@ -195,28 +196,35 @@ void receiving_mode(){
 		if(Serial.available()){
 			// read the incoming byte:
 			int in_ascii = Serial.read();
-
+			char in_char = in_ascii;
 
 			//String temp(in_ascii);
 			//tft.print(temp);
 
 			//WARNING: ASCII on arduino is not normal.
-			if(in_ascii < 48 && in_ascii != 32 ){//temp comment: change to >123 for max letter (?). 
+			// if(in_ascii < 48 && in_ascii != 32 ){//temp comment: change to >123 for max letter (?). 
 				//you got yourself a special character indicating an operation. 
 
 
-				if(in_ascii == 33){ //example this is !
-					//This could be where I call the function to goto mode two and get that file 
-					breakout = true;
-				}
-
-				else if(in_ascii == 8){//backspace
-					tft.fillRect(cursor_x,cursor_y,x_increment,y_increment,TFT_BLACK);
-					cursor_back();
-					tft.fillRect(cursor_x,cursor_y,x_increment,y_increment,TFT_BLACK);	
-				}
+			if(in_char == '0'){ //example this is !
+				//This could be where I call the function to goto mode two and get that file 
+				// breakout = true;
+				cursor_x = 0;
+				cursor_y += y_increment;
+				tft.setCursor(cursor_x, cursor_y);
 			}
-      		else{
+
+			else if(in_char == '1'){//backspace
+				tft.fillRect(cursor_x,cursor_y,x_increment,y_increment,TFT_BLACK);
+				cursor_back();
+				tft.fillRect(cursor_x,cursor_y,x_increment,y_increment,TFT_BLACK);	
+			}else if(in_char=='9'){
+				breakout = true;
+				tft.fillScreen(TFT_BLACK);
+				Serial.println("O");
+
+				 
+			}else{
       			//Received a char. Now print to screen being mindful of cursor location
       			//tft.setCursor(cursor_x,cursor_y);
       			char in_char = in_ascii;
@@ -268,7 +276,6 @@ bool get_files(int & num_of_files){
 
 }
 
-
 bool select_file(){
 	/*Getnames of files, display them and allow user to make selection
 	Send selection back to server and load the file
@@ -280,6 +287,7 @@ bool select_file(){
 	int text_size = 4;
 	tft.setCursor(cursor_x,cursor_y);
 	tft.setTextSize(text_size);
+	
 	tft.setTextColor(TFT_WHITE);
 	int x_increment = text_size*6; int y_increment = text_size*8;
 
@@ -304,7 +312,6 @@ bool select_file(){
 	tft.print("New File");
 	cursor_y+=y_increment;
 	
-	
 
 	while(!selected){
 		//Take care of touching the screen
@@ -319,12 +326,12 @@ bool select_file(){
 			//tft.println(y_touch);
 			selection = (y_touch -24)/y_increment;
 			selected = true;
-			tft.println(selection);
+			// tft.println(selection);
 
 		}
 		
 	}
-	tft.println(num_of_files);
+	// tft.println(num_of_files);
 	
 	
 	
@@ -346,17 +353,17 @@ bool select_file(){
 		
 	}
 
-	if(selection != num_of_files){
-		tft.println(selection);
-		tft.println(num_of_files);
-	}
+	// if(selection != num_of_files){
+	// 	tft.println(selection);
+	// 	tft.println(num_of_files);
+	// }
 
 	
 	if(selection == num_of_files){
 		//If they decide to open a new txtfile
 		tft.fillScreen(BLACK);
 		status_message("New File Name? ");
-		text_size =2;
+		int text_size = 2;
 		tft.setTextSize(text_size);
 		tft.setTextColor(TFT_BLACK,TFT_WHITE);
 		cursor_x = 15*12; cursor_y = 4;
@@ -378,18 +385,21 @@ bool select_file(){
 					cursor_back();
 					tft.fillRect(cursor_x,cursor_y,x_increment,y_increment,TFT_WHITE);	
 				}
-				else if(in_ascii == 33){
+				else if(in_char == '0'){
 					//We need to determine a button that signifies the end,
 					//Prob same ascii we decide is enter.
 					//for now it is !.
 
 					finished = true;
+					tft.setCursor(0,24);
+					cursor_x = 0;
+					cursor_y = 24;
 				}
       			else{
       				
 	      			//tft.fillRect(cursor_x,cursor_y,x_increment,y_increment,TFT_WHITE);
 	      			tft.print(in_char);
-	      			cursor_forward();
+	      			cursor_forward(2);
 	      		}
 			}
 		}
@@ -404,13 +414,14 @@ bool select_file(){
 
 	else{
 		//They chose an existing file
-		String temp = file_names[selection];
-		status_message(temp.c_str());
+		// String temp = file_names[selection];
+		// status_message(temp.c_str());
+		tft.fillScreen(TFT_BLACK);
+		status_message("Editing...");
 		cursor_x = 0; cursor_y = 24;
 		tft.setCursor(cursor_x,cursor_y);
 
 		return 1;
-
 		
 	}
 
@@ -430,10 +441,9 @@ int main() {
 		Serial.flush();
 
 		while(!select_file());
-		
+
 		//receiving_mode();
 		receiving_mode();		
-
 	}
 	return 0;
 }

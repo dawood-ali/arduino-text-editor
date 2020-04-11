@@ -9,8 +9,8 @@
 #include <cassert>
 #include <string>
 #include <iostream>
+#include <unistd.h>
 
-using namespace std;
 
 int main() {
   //VERY IMPORTANT THIS IS DONE CORRECTLY TRUE
@@ -40,10 +40,8 @@ int main() {
 
   // whether or not to go to filesystem
   bool fileSystem = true;
-  bool nSent = false;
 
   FileManager file;
-  //bool nSent = false;
 
   while(true) {
     if (fileSystem) {
@@ -56,29 +54,24 @@ int main() {
       fileNames >> numFiles;
       fileNames.get();
       chosenFileIndex = numFiles + 2;
-
       // send num to ahmed;
-
-      // TRYING TO LIMIT N 2 So we can see keyboard input
-      // if(!nSent){
-      //   screenSerial.writeline("N "+to_string(numFiles)+"\n"); // do we need a protocol??
-      // } 
-
+      screenSerial.writeline("N "+to_string(numFiles)+"\n"); // do we need a protocol??
       //cout<<to_string(numFiles)<<endl;
       // wait for affirmation from the arduino.
       screenRequest = screenSerial.readline(1000);
-      cout << screenRequest<<endl;
+      cout << to_string(numFiles) <<endl;
+
       if(screenRequest[0] == 'A'){
-        // nSent = true;
         while (getline(fileNames, tempfilename)) {
           //string tempfilename;
           //Readlines and get confirmation
           screenSerial.writeline("F "+tempfilename+" \n");
           screenRequest = screenSerial.readline(1000);
-          cout << screenRequest<<endl;
+          cout << tempfilename << endl;
+          cout << screenRequest << endl;
           if(screenRequest[0]!= 'B'){
             //restart the loop
-            return 0;
+            // return 0;
           }
         }
 
@@ -88,7 +81,7 @@ int main() {
         bool selected = false;
         while(!selected){
           screenRequest = screenSerial.readline(1000);
-          cout << screenRequest<<endl;
+          // cout << screenRequest<<endl;
           if(screenRequest[0] == 'N'){
             /*
             cout << screenRequest<<endl;
@@ -96,29 +89,66 @@ int main() {
             int temp2 = stoi(temp);
             cout<<temp2<<endl;
            */ 
+            cout << screenRequest<<endl;
             string kmfs = screenRequest.substr(2);
             int kmfs_int = stoi(kmfs);
+
+
             cout<<kmfs_int<<endl;
             if(kmfs_int == numFiles){
               //New file
               chosenFileIndex = numFiles;
-              screenSerial.writeline("A");
+              screenSerial.writeline("A \n");
 
               //Accept chars from keyboard to type the textfile name
               //Send those chars to screen, when they hit enter we assume theyre done typing
               //Once theyre done typing send that whole name as one string to screen.
               //Also add that testname to the end of this txt file
-              string testfilename = "WaltzisWhite.txt";
-              /*
-              while (!file.isValidfName(testfilename)) {
-                // request other file name
-              }*/
+              bool testFilling = true;
+              string testfilename = "";
+              while(testFilling){
+                
+                keyboardRequest = keyboardSerial.readline(500);
+                cout << keyboardRequest << endl;
+                if(keyboardRequest.size()>2){
+                  if(keyboardRequest[0]=='K' && stoi(keyboardRequest.substr(2)) != 55 ){
+                    string keys = "qwertyuiopasdfghjklzxcvbnmQWERTYUIOPASDFGHJKLZXCVBNM";
+
+                    int ind = stoi(keyboardRequest.substr(2));
+                    
+                    string letter(1, keys[ind]);
+
+                    testfilename+=letter;
+
+                    screenSerial.writeline(letter);
+
+                    keyboardRequest = keyboardSerial.readline(50);
+
+
+                  }else{
           
-              file.setFileName(testfilename);
+                    if(stoi(keyboardRequest.substr(2)) == 55){
+                      screenSerial.writeline("0");
+                      keyboardRequest = keyboardSerial.readline(500);
+                      testFilling = false;
+                    }
+                  }
+                }
+
+              }
+          
+              file.setFileName("textfiles/" + testfilename + ".txt");
               file.createFile();
 
-             
+              fileNames.open("textfiles/" + testfilename + ".txt");
+              file.setFileName("textfiles/" + testfilename + ".txt");
+              
+              
+
               selected = true;
+              fileSystem = false;
+
+              
 
             }
             else if(kmfs_int < numFiles){
@@ -129,54 +159,55 @@ int main() {
               chosenFileIndex = kmfs_int;
               screenSerial.writeline("A \n");
               selected = true;
-              cout<<"Ive spent 3 hours debugging this fucking shit"<<endl;
-
+            
               // choose and read from existing
               fileNames.open("textfiles/textFileMaster.txt");
               fileNames >> numFiles;
               fileNames.get();
 
               for (int i = 0;i<=chosenFileIndex;i++) {
-                cout<<"Ive spent 3 hours debugging this fucking shit"<<endl;
                 getline(fileNames, tempfilename);
               }
               fileNames.open("textfiles/" + tempfilename);
-              //file.setFileName(tempfilename);
+              file.setFileName(tempfilename);
               cout<<tempfilename<<endl;
-              cout<<"Ive spent 3 hours debugging this fucking shit"<<endl;
               fileContents = file.readContents();
-              cout<<"Ive spent 3 hours debugging this fucking shit"<<endl;
-
-              screenSerial.writeline(fileContents);
+              // screenSerial.writeline(fileContents);
               
-              /*
+              cout << "Hello" << endl;
+              // screenSerial.writeline(tempfilename);
+
               for (auto letter : fileContents) {
-                if (letter != '\n') {
-                  screenSerial.writeline(letter + "\n");
+                if (letter != '0') {
+                  string tempString(1, letter);
+                  screenSerial.writeline(tempString);
+                  cout << tempString << endl;
+                  usleep(50000);
+                }else{
+                  fileContents = fileContents.substr(0, fileContents.find("0"));
+                  file.updateContents(fileContents);
                 }
                 me.cEnd = me.curIndex = fileContents.length();// ???
               }
-              */
+              
+              selected = true;
               fileSystem = false;
-              return 1;
             }
-
           }
         }
-
       }
     }else {
       // readstrngs and check for go to filesystem
-      keyboardRequest = keyboardSerial.readline(50);
+      keyboardRequest = keyboardSerial.readline(500);
       if(keyboardRequest.size()!=0){
-        parseKeyBoardInput(keyboardRequest, screenSerial, keyboardSerial, fileContents, me);
-        keyboardRequest=""; //Empty request when done parsing
+        parseKeyBoardInput(keyboardRequest, screenSerial, keyboardSerial, fileContents, me, file);
+        keyboardRequest= keyboardSerial.readline(50); //Empty request when done parsing
       }
 
       // Parse Screen wiwth 1 second timeout
-      screenRequest = screenSerial.readline(50);
+      screenRequest = screenSerial.readline(500);
       if(screenRequest.size()!=0){
-        parseScreenInput(screenRequest, screenSerial, keyboardSerial);
+        parseScreenInput(screenRequest, screenSerial, keyboardSerial, fileSystem);
         screenRequest = ""; //Empty request when done parsing
       }
     }

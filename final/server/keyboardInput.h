@@ -15,10 +15,11 @@ string copiedContents;
 
 
 //Parse request from the keybord
-void parseKeyBoardInput(string& request, SerialPort& screenSerial, SerialPort& keyboardSerial, string& contents, contentFunctionality& me){
+void parseKeyBoardInput(string& request, SerialPort& screenSerial, SerialPort& keyboardSerial, string& contents, contentFunctionality& me, FileManager& file){
     //For now simply reads the character and validates the request
     //Keyboard assumes request in form:
     // K <num>\n
+
 
     //Keys array for letters
     string keys = "qwertyuiopasdfghjklzxcvbnmQWERTYUIOPASDFGHJKLZXCVBNM";
@@ -27,32 +28,34 @@ void parseKeyBoardInput(string& request, SerialPort& screenSerial, SerialPort& k
         int val = stoi(request.substr(2));
 
         // Alphabet
-        if(val >= 0 && val <= 51 ){
+        if(val >= 0 && val <= 25 ){
             string letter(1, keys[val]);
-            screenSerial.writeline(letter + "\n");
+            screenSerial.writeline(letter);
+            contents+=letter;
 
             return;
         }
         
         // caps is 52
+        // if()s
 
         // Space Bar
         else if(val ==53 || val == 54){
-            screenSerial.writeline(" \n");
+            screenSerial.writeline(" ");
 
             return;
         }
 
         // Enter word
         if(val == 55){
-            screenSerial.writeline("enter\n");
+            screenSerial.writeline("0");
             // do i add \n to the ting?
             return;
         }
 
         // Delete
         if(val == 56){
-            screenSerial.writeline("delete\n");
+            screenSerial.writeline("1");
             if (endIndex > 0) {
               contents.erase(me.endIndex);
               contents.erase(me.endIndex);
@@ -63,7 +66,7 @@ void parseKeyBoardInput(string& request, SerialPort& screenSerial, SerialPort& k
 
         // -> arrow, Select
         if(val == 57){
-            screenSerial.writeline("rarrow\n");
+            screenSerial.writeline("rarrow");
             if (me.endIndex > me.curIndex) {
               if (me.toggleSelect && me.endIndex > me.cEnd && me.cEnd == me.curIndex) {
                 cEnd++;
@@ -77,7 +80,7 @@ void parseKeyBoardInput(string& request, SerialPort& screenSerial, SerialPort& k
 
         // <- arrow, Select
         if(val == 58){
-            screenSerial.writeline("larrow\n");
+            screenSerial.writeline("larrow");
             if (me.toggleSelect && me.cEnd > 0 && me.cEnd == me.curIndex && me.cEnd != me.cStart) {
               me.cEnd--;
             }else if (me.toggleSelect && me.cStart > 0 && me.cStart == me.curIndex && me.cEnd != me.cStart) {
@@ -92,7 +95,7 @@ void parseKeyBoardInput(string& request, SerialPort& screenSerial, SerialPort& k
         // Cut
         if(val == 59){
             // resend all contents yes
-            screenSerial.writeline("cut\n");
+            screenSerial.writeline("cut");
             if (me.cStart > me.cEnd) {
               // uhh something went horribly wrong.
             }
@@ -107,7 +110,7 @@ void parseKeyBoardInput(string& request, SerialPort& screenSerial, SerialPort& k
 
         // Copy
         if(val == 60){
-            screenSerial.writeline("copy\n");
+            screenSerial.writeline("copy");
             if (me.cStart > me.cEnd) {
               // uhh something went horribly wrong.
             }
@@ -121,7 +124,7 @@ void parseKeyBoardInput(string& request, SerialPort& screenSerial, SerialPort& k
 
         // Paste
         if(val == 61){
-            screenSerial.writeline("paste\n");
+            screenSerial.writeline("paste");
             contents.insert(me.curIndex,copiedContents);
             me.curIndex+=copiedContents.length();
             for (auto i : copiedContents) {
@@ -132,7 +135,7 @@ void parseKeyBoardInput(string& request, SerialPort& screenSerial, SerialPort& k
 
         // Select
         if(val == 62){
-            screenSerial.writeline("select\n");
+            screenSerial.writeline("select");
             if (me.toggleSelect) {
               me.toggleSelect = false;
             }else {
@@ -142,31 +145,11 @@ void parseKeyBoardInput(string& request, SerialPort& screenSerial, SerialPort& k
             return;
         }
 
-        // Find
+        // Open
         if(val == 63){
-            screenSerial.writeline("find\n");
-
-            return;
-        }
-
-        // Replace
-        if(val == 64){
-            screenSerial.writeline("replace\n");
-
-            return;
-        }
-
-        // Undo
-        if(val == 65){
-            screenSerial.writeline("undo\n");
-
-            return;
-        }
-
-        // Redo
-        if(val == 66){
-            screenSerial.writeline("redo\n");
-
+            screenSerial.writeline("9");
+            contents+="0";
+            file.updateContents(contents);
             return;
         }
 

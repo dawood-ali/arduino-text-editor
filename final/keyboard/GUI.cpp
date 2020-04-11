@@ -359,7 +359,7 @@ void key_pressed() {
 
     	else if(index==27 || index==28) {
 				//lineToSend+=String(index+26);
-				Serial.println("K 27");
+				Serial.println("K 53");
 
     		cursor_x+=12;
 
@@ -398,6 +398,7 @@ void key_pressed() {
 
     			//this is backspace so just send the index no need to send an ascii
     			cursor_x-=12;
+				Serial.println("K 56");
     			tft.fillRect(cursor_x,cursor_y,12,18,BLACK);
     		}
     	}
@@ -408,7 +409,7 @@ void key_pressed() {
 				//lineToSend+=String(index+26);
 
 
-				//Serial.println(lineToSend);
+				Serial.println("K 55");
 
 
 
@@ -629,7 +630,7 @@ void tools_pressed() {
 
     	else if (pixel_y==5 && pixel_x>160 && pixel_x < 320) {
     		//how you gonna Open.
-			Serial.println("K 38");
+			Serial.println("K 63");
     	}
 
     	else if (pixel_y==6 && pixel_x>160 && pixel_x < 320) {

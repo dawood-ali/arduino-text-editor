@@ -52,7 +52,7 @@ class FileManager{
       }
 
       string readContents() {
-        ifstream file(filename);
+        ifstream file("textfiles/" + filename);
 
         file.seekg(0, ios::end);
         contents.reserve(file.tellg());
@@ -68,7 +68,9 @@ class FileManager{
       void updateContents(string updatedContents) {
         contents = updatedContents;
         ofstream fileObject;
-        fileObject.open(filename, ofstream::out | ofstream::trunc);
+
+        fileObject.open("textfiles/" + filename, ofstream::out | ofstream::trunc);
+        
         // fileObject.write(curContents.c_str(),curContents.size());
         fileObject << contents;
         fileObject.close();

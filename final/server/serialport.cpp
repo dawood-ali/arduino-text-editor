@@ -72,6 +72,6 @@ string SerialPort::readline(int timeout ) {
 }
 
 bool SerialPort::writeline(const string& line) {
-  cout << line;
+  // cout << line;
   return write(fd, line.c_str(), line.length());
 }
