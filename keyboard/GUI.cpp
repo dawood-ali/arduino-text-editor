@@ -165,6 +165,7 @@ void setup() {
 	}
 }
 
+// This function goes through and draws the keyboard
 void draw_keys() {
 
 	tft.setTextColor(WHITE);
@@ -230,6 +231,7 @@ void draw_keys() {
 	cursor_y=20;
 };
 
+// This function sends to the server the key that is pressed
 void key_pressed() {
 
 	//NOTE: just send the index of the letters along with the state of capslock to
@@ -278,6 +280,7 @@ void key_pressed() {
 				if (subtract) {
 					index-=26;
 				}
+				// these are the a-z keys
 			if(index==0) Serial.println("K 0");
 			if(index==1) Serial.println("K 1");
 			if(index==2) Serial.println("K 2");
@@ -331,7 +334,7 @@ void key_pressed() {
 
     		}
     	}
-
+			// indicates a caps lock
     	else if (index==26) {
 				//lineToSend+=String(index+26);
 				Serial.println("K 26");
@@ -377,7 +380,7 @@ void key_pressed() {
 				//lineToSend+=String(index+26);
 
 				//I DONT KNOW WHAT TO DO HERE PLEASE HELP
-				
+
 
     		if(cursor_x==0) {
 
@@ -396,7 +399,7 @@ void key_pressed() {
 
     		else {
 
-    			//this is backspace so just send the index no need to send an ascii
+    			// this is backspace
     			cursor_x-=12;
 				Serial.println("K 56");
     			tft.fillRect(cursor_x,cursor_y,12,18,BLACK);
@@ -406,14 +409,14 @@ void key_pressed() {
     	else if(index==29) {
 
 
-				//lineToSend+=String(index+26);
+				// lineToSend+=String(index+26);
 
 
 				Serial.println("K 55");
 
 
 
-    		//this is the return carrier, so just send the index 29 no need for ascii
+    		// this is the return carrier
 
     		old_cursor_x=cursor_x;
     		old_cursor_y=cursor_y;
@@ -431,13 +434,11 @@ void key_pressed() {
 
 };
 
+// this function draws out the second screen that holds the functions such as copy, paste, ect...
 void tool_bar() {
 
 	int box_location_x= 160;
 	int box_location_y=0;
-
-	//here you might need to send an ascii cause the young god is running low on fuel to
-	//devise a smart ass solution like key pressed.
 
 	tft.fillScreen(BLACK);
 
@@ -516,6 +517,8 @@ void tool_bar() {
 
 };
 
+
+// this function is invoked when a tool is pressed, it will send the digit that we have defined for that given funciton
 void tools_pressed() {
 
 	TSPoint p= ts.getPoint();
@@ -659,7 +662,7 @@ void tools_pressed() {
     		font_size=1;
 
     		//Serial.print("BIGGER");
-    		
+
     		//SEND A COMMAND FOR INCREASING FONTSIZE
     	}
 
@@ -670,6 +673,7 @@ void tools_pressed() {
 	}
 }
 
+// main function that runs all the functions
 int main() {
 
 	setup();
