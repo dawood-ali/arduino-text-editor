@@ -1,6 +1,4 @@
 //Some of these are unused
-#include "wdigraph.h"
-#include "dijkstra.h"
 #include "serialport.h"
 #include "keyboardInput.h"
 #include "screenInput.h"

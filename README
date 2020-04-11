@@ -1,7 +1,7 @@
-Name of culprits: 
-- Olumide Okubanjo ( ID ), 
-- Ahmed Ahmed( ID ), 
-- Walter Ostrander ( ID ),
+Name of culprits:
+- Olumide Okubanjo (1573500),
+- Ahmed Ahmed(1597548),
+- Walter Ostrander (1587695),
 - Mohamed Ali (1573724).
 
 CMPUT 275 Winter 2020
@@ -15,10 +15,11 @@ Included Files:
 	*README
 
 Accessories:
-	*Arduino Mega2560
+	* 2x Arduino Mega2560 and cables
+	* 2x TFt Arduino Shields
 
 Wiring Instructions:
--Ensure the screen is mounted to arduino through shield by alligning the Pins to their labelled sockets on arduino board.
+-Ensure the screen is mounted to arduino through shield by alligning the Pins to their labelled sockets on arduino board and both connected via USB to computer.
 
 Part worked on by each culprit:
 
@@ -55,5 +56,3 @@ Aspects Not Finished due to COVID-19 pandemic:
 	*Auto-completion: Suggests the next most probable word in a finite list of words containing the starting x letters.
 
 	*image insertion: Insert images.
-
-	

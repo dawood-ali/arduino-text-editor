@@ -1,5 +1,5 @@
 CC=g++
-OBJS=server.o digraph.o serialport.o
+OBJS=server.o serialport.o
 CFLAGS=-c -Wall -O2
 LFLAGS=-static
 PROGRAM=server
@@ -9,12 +9,8 @@ $(PROGRAM): $(OBJS)
 	$(CC) $(OBJS) -o $(PROGRAM) $(LFLAGS)
 
 #Server object target
-server.o: server.cpp wdigraph.h dijkstra.h serialport.h keyboardInput.h screenInput.h
+server.o: server.cpp serialport.h keyboardInput.h screenInput.h
 	$(CC) server.cpp -o server.o $(CFLAGS)
-
-#Digraph target
-digraph.o: digraph.cpp digraph.h
-	$(CC) digraph.cpp -o digraph.o $(CFLAGS)
 
 #Serialport target
 serialport.o: serialport.cpp
