@@ -1,0 +1,30 @@
+Name of culprits: 
+- Olumide Okubanjo ( ID ), 
+- Ahmed Ahmed( ID ), 
+- Walter Ostrander ( ID ),
+- Mohamed Ali (1573724).
+
+CMPUT 275 Winter 2020
+Team: Gradient of colours.
+Final Project (The Text Editor)
+
+Included Files:
+	*All Those in "Keyboard" Directory.
+	*All Those in "Server" Directory.
+	*Makefile
+	*README
+
+Accessories:
+	*Arduino Mega2560
+
+Wiring Instructions:
+-Ensure the screen is mounted to arduino through shield by alligning the Pins to their labelled sockets on arduino board.
+
+Running Instructions:
+
+
+Notes And Assumptions:
+
+-This project revolves around a text editor done using 2 arduino screens, One being a keyboard and the other being the display screen. The two screens communicate through a common server which is the computer in this case. The communication protocol is essentially key letters and numbers that distinguish every command individually so that it prohibits the discrepency in which command is being sent from the keyboard to server and vice versa. This however, doesn't omit the fact that the accuracy of the Arduino touch screen is very unreliable hence portions of the screen may be activated due to nearby touchscreen activity, this doesn't happen frequently to be a significant issue.
+
+The functionality of this project is limited to hardware restrictions and internal software issues. This is due to the communication being sometimes very high traffic in terms of 2 way information between both the screen, server and keyboard. Hence the flood of information results in slowed down response as the software prioritizes the execution of commands received before than others. Whereas in a computer text editor, the software has direct communication to the screen with no middle man being the server which hosts as the information trafficker.
