@@ -45,6 +45,7 @@ int main() {
 
   while(true) {
     if (fileSystem) {
+      //File manager. send current files and receive choice.
 
       int numFiles;
       string tempfilename;
@@ -55,7 +56,7 @@ int main() {
       fileNames.get();
       chosenFileIndex = numFiles + 2;
       // send num to ahmed;
-      screenSerial.writeline("N "+to_string(numFiles)+"\n"); // do we need a protocol??
+      screenSerial.writeline("N "+to_string(numFiles)+"\n"); 
       //cout<<to_string(numFiles)<<endl;
       // wait for affirmation from the arduino.
       screenRequest = screenSerial.readline(1000);
@@ -80,15 +81,11 @@ int main() {
         //They are now selecting and all that
         bool selected = false;
         while(!selected){
+          //waiting for their selection.
           screenRequest = screenSerial.readline(1000);
           // cout << screenRequest<<endl;
           if(screenRequest[0] == 'N'){
-            /*
-            cout << screenRequest<<endl;
-            string temp = screenRequest[2];
-            int temp2 = stoi(temp);
-            cout<<temp2<<endl;
-           */ 
+            //
             cout << screenRequest<<endl;
             string kmfs = screenRequest.substr(2);
             int kmfs_int = stoi(kmfs);
@@ -136,7 +133,7 @@ int main() {
                 }
 
               }
-          
+              //testfilename is the selected file name. open it to edit.
               file.setFileName("textfiles/" + testfilename + ".txt");
               file.createFile();
 
@@ -176,7 +173,9 @@ int main() {
               
               cout << "Hello" << endl;
               // screenSerial.writeline(tempfilename);
-
+              
+              
+              //send contents of the file and begin editing.
               for (auto letter : fileContents) {
                 if (letter != '0') {
                   string tempString(1, letter);
@@ -197,6 +196,8 @@ int main() {
         }
       }
     }else {
+      //Regular typing mode.
+      
       // readstrngs and check for go to filesystem
       keyboardRequest = keyboardSerial.readline(500);
       if(keyboardRequest.size()!=0){
