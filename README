@@ -20,6 +20,17 @@ Accessories:
 Wiring Instructions:
 -Ensure the screen is mounted to arduino through shield by alligning the Pins to their labelled sockets on arduino board.
 
+Part worked on by each culprit:
+
+	*Olumide Okubanjo: 2-way Communication between screen, server and keyboard.
+
+	*Ahmed Ahmed: Screen file manager, server to screen communication protocol and screen to server communication protocol.
+
+	*Walter Ostrander: File manager to store the saved files and load up the exisiting files.
+
+	*Mohamed Ali: Keyboard GUI with a second view tool bar.
+
+
 Running Instructions:
 
 
@@ -28,3 +39,21 @@ Notes And Assumptions:
 -This project revolves around a text editor done using 2 arduino screens, One being a keyboard and the other being the display screen. The two screens communicate through a common server which is the computer in this case. The communication protocol is essentially key letters and numbers that distinguish every command individually so that it prohibits the discrepency in which command is being sent from the keyboard to server and vice versa. This however, doesn't omit the fact that the accuracy of the Arduino touch screen is very unreliable hence portions of the screen may be activated due to nearby touchscreen activity, this doesn't happen frequently to be a significant issue.
 
 The functionality of this project is limited to hardware restrictions and internal software issues. This is due to the communication being sometimes very high traffic in terms of 2 way information between both the screen, server and keyboard. Hence the flood of information results in slowed down response as the software prioritizes the execution of commands received before than others. Whereas in a computer text editor, the software has direct communication to the screen with no middle man being the server which hosts as the information trafficker.
+
+Aspects Not Finished due to COVID-19 pandemic:
+
+	*Copy and Paste: a feature that allows you to copy and paste text from the screen to other positions on the screen selected by user.
+
+	*Undo/redo: a feature that reverts the most recent changes made to the text on screen.
+
+	*syntax highlighting: this feature recognizes c++ commands and changes the colours to identify them as functions.
+
+	*Bolding: makes the characters bold.
+
+	*italicization: Changes letters to italics.
+
+	*Auto-completion: Suggests the next most probable word in a finite list of words containing the starting x letters.
+
+	*image insertion: Insert images.
+
+	
