@@ -44,6 +44,7 @@
 #define MAGENTA 0xF81F
 #define YELLOW 0xFFE0
 
+bool font_size=0;  //0 for size 1 and 1 for size 2   MAKE K 62 FONTSIZE 1 AND K 63 FONT SIZE 2
 MCUFRIEND_kbv tft;
 
 // a multimeter reading says there are 300 ohms of resistance across the plate,
@@ -81,6 +82,8 @@ char Save[6]= {"Save"};
 char Open[6]={"Open"};
 char Undo[5]={"Undo"};
 char Redo[5]= {"Redo"};
+char Plus[2]= {"+"};
+char Minus[2]= {"-"};
 
 bool caps_lock=false;
 
@@ -275,7 +278,7 @@ void key_pressed() {
 				if (subtract) {
 					index-=26;
 				}
-			/*if(index==0) Serial.println("K 0");
+			if(index==0) Serial.println("K 0");
 			if(index==1) Serial.println("K 1");
 			if(index==2) Serial.println("K 2");
 			if(index==3) Serial.println("K 3");
@@ -300,7 +303,7 @@ void key_pressed() {
 			if(index==22) Serial.println("K 22");
 			if(index==23) Serial.println("K 23");
 			if(index==24) Serial.println("K 24");
-			if(index==25) Serial.println("K 25");*/
+			if(index==25) Serial.println("K 25");
 
     		if (!caps_lock) {
 
@@ -330,8 +333,8 @@ void key_pressed() {
     	}
 
     	else if (index==26) {
-				lineToSend+=String(index+26);
-				Serial.println(lineToSend);
+				//lineToSend+=String(index+26);
+				Serial.println("K 26");
 
     		if (!caps_lock) {
 
@@ -355,8 +358,8 @@ void key_pressed() {
     	}
 
     	else if(index==27 || index==28) {
-				lineToSend+=String(index+26);
-				Serial.println(lineToSend);
+				//lineToSend+=String(index+26);
+				Serial.println("K 27");
 
     		cursor_x+=12;
 
@@ -368,8 +371,13 @@ void key_pressed() {
     	}
 
     	else if(index==30) {
-				lineToSend+=String(index+26);
-				Serial.println(lineToSend);
+
+
+
+				//lineToSend+=String(index+26);
+
+				//I DONT KNOW WHAT TO DO HERE PLEASE HELP
+				
 
     		if(cursor_x==0) {
 
@@ -395,8 +403,14 @@ void key_pressed() {
     	}
 
     	else if(index==29) {
-				lineToSend+=String(index+26);
-				Serial.println(lineToSend);
+
+
+				//lineToSend+=String(index+26);
+
+
+				//Serial.println(lineToSend);
+
+
 
     		//this is the return carrier, so just send the index 29 no need for ascii
 
@@ -452,6 +466,30 @@ void tool_bar() {
 
 	tft.setCursor(text_location_x,text_location_y+120);
 	tft.print(Cut);
+
+	tft.setCursor(0, text_location_y+120);
+
+	tft.print("Size:");
+
+	tft.setCursor(70,130);
+
+	tft.drawFastHLine(60,120,30,WHITE);
+
+	tft.print(Minus);
+
+	tft.drawFastHLine(60,150,30,WHITE);
+
+	tft.drawFastVLine(90,120,30,WHITE);
+	tft.drawFastVLine(60,120,30,WHITE);
+
+	tft.setCursor(70,90);
+
+	tft.print(Plus);
+
+	tft.drawFastVLine(60,83,30,WHITE);
+	tft.drawFastVLine(90,83,30,WHITE);
+	tft.drawFastHLine(60,83,30,WHITE);
+	tft.drawFastHLine(60,113,30,WHITE);
 
 	tft.setCursor(text_location_x,text_location_y+160);
 	tft.print(Save);
@@ -563,8 +601,8 @@ void tools_pressed() {
 				if(pixel_y==0 && pixel_x>120 && pixel_x < 160) {
 					Serial.println("K 31");
 	    		//how you gonna copy cuz idk.
-	    	}else if(pixel__y==0 && pixel_x>320 && pixel_x < 360) {
-					Serial.println("K 32")
+	    	}else if(pixel_y==0 && pixel_x>320 && pixel_x < 360) {
+					Serial.println("K 32");
 				}
 
     	}
@@ -603,9 +641,30 @@ void tools_pressed() {
     		current_state=keyboard_view1;
     	}
 
+
+    	else if (pixel_y==3 && pixel_x>60 && pixel_x < 90) {
+
+
+    		font_size=0;
+
+    		//Serial.print("SMALLER");
+
+    		//SEND A COMMAND FOR reducing FONTSIZE
+
+    	}
+
+    	else if(pixel_y==2 && pixel_x> 60 && pixel_x < 90) {
+
+    		font_size=1;
+
+    		//Serial.print("BIGGER");
+    		
+    		//SEND A COMMAND FOR INCREASING FONTSIZE
+    	}
+
     	else {
     		//what you want to do with redo
-			Serial.println("K 40");
+			//Serial.println("K 40");
     	}
 	}
 }

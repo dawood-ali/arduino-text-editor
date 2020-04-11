@@ -364,7 +364,7 @@ bool select_file(){
 		int x_increment = text_size*6; int y_increment = text_size*8;
 
 
-		//get this fucking name
+		//get this name
 		bool finished = false;
 		while(!finished){
 			if(Serial.available()){
@@ -430,6 +430,7 @@ int main() {
 		Serial.flush();
 
 		while(!select_file());
+		
 		//receiving_mode();
 		receiving_mode();		
 

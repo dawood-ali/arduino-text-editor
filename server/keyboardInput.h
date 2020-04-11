@@ -33,6 +33,7 @@ void parseKeyBoardInput(string& request, SerialPort& screenSerial, SerialPort& k
 
             return;
         }
+        
         // caps is 52
 
         // Space Bar
