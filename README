@@ -34,7 +34,7 @@ Part worked on by each culprit:
 
 Running Instructions:
 	Open three terminals. For the first, nagivate to the keyboard folder, run make upload. On the second, navigate to the screen folder and run make upload.
-	On the third, navigate to screen/server and run make upload. Now you are able to choose a file or make a new file. You can then type on this file.
+	On the third, navigate to server and run make upload. Now you are able to choose a file or make a new file. You can then type on this file.
 	Once you are done, you can then save the file. You are then able to choose another file to open and edit.
 
 
